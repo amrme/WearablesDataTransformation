@@ -3,8 +3,8 @@ require("data.table")
 require("reshape2")
 
 # load the data
-colNames <- read.table("./UCI HAR Dataset/colNames.txt")[,2]
-actLabels <- read.table("./UCI HAR Dataset/actLabels.txt")[,2]
+colNames <- read.table("./UCI HAR Dataset/features_info.txt")[,2]
+actLabels <- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
 
 # get the data for the means and sd only
 extract_colNames <- grepl("mean|std", colNames)
@@ -14,7 +14,7 @@ X_test = X_test[,extract_colNames]
 # Load and process X_test and y_test data.
 X_test <- read.table("./UCI HAR Dataset/test/X_test.txt")
 y_test <- read.table("./UCI HAR Dataset/test/y_test.txt")
-subjTest <- read.table("./UCI HAR Dataset/test/subjTest.txt")
+subjTest <- read.table("./UCI HAR Dataset/test/subject_test.txt")
 
 
 # Load activity labels
@@ -49,7 +49,7 @@ data = rbind(test_data, train_data)
 
 id_labels   = c("subject", "Activity_ID", "Activity_Label")
 data_labels = setdiff(colnames(data), id_labels)
-melt_data      = melt(data, id = id_labels, measure.vars = data_labels)
+melt_data   = melt(data, id = id_labels, measure.vars = data_labels)
 
 tidy_data   = dcast(melt_data, subject + Activity_Label ~ variable, mean)
 write.table(tidy_data, file = "./tidy_data.txt")
