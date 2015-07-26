@@ -1,0 +1,17 @@
+{
+    "contents" : "\nrequire(\"data.table\")\nrequire(\"reshape2\")\n\n# load the data\ncolNames <- read.table(\"./UCI HAR Dataset/colNames.txt\")[,2]\nactLabels <- read.table(\"./UCI HAR Dataset/actLabels.txt\")[,2]\n\n# get the data for the means and sd only\nextract_colNames <- grepl(\"mean|std\", colNames)\nnames(X_test) = colNames\nX_test = X_test[,extract_colNames]\n\n# Load and process X_test and y_test data.\nX_test <- read.table(\"./UCI HAR Dataset/test/X_test.txt\")\ny_test <- read.table(\"./UCI HAR Dataset/test/y_test.txt\")\nsubjTest <- read.table(\"./UCI HAR Dataset/test/subjTest.txt\")\n\n\n# Load activity labels\ny_test[,2] = actLabels[y_test[,1]]\nnames(y_test) = c(\"Activity_ID\", \"Activity_Label\")\nnames(subjTest) = \"subject\"\n\n# Bind data\ntest_data <- cbind(as.data.table(subjTest), y_test, X_test)\n\n# Load and process X_train & y_train data.\nX_train <- read.table(\"./UCI HAR Dataset/train/X_train.txt\")\ny_train <- read.table(\"./UCI HAR Dataset/train/y_train.txt\")\n\nsubject_train <- read.table(\"./UCI HAR Dataset/train/subject_train.txt\")\n\nnames(X_train) = colNames\n\n# Extract only the measurements on the mean and standard deviation for each measurement.\nX_train = X_train[,extract_colNames]\n\n# Load activity data\ny_train[,2] = actLabels[y_train[,1]]\nnames(y_train) = c(\"Activity_ID\", \"Activity_Label\")\nnames(subject_train) = \"subject\"\n\n# Bind data\ntrain_data <- cbind(as.data.table(subject_train), y_train, X_train)\n\n# Merge test and train data\ndata = rbind(test_data, train_data)\n\nid_labels   = c(\"subject\", \"Activity_ID\", \"Activity_Label\")\ndata_labels = setdiff(colnames(data), id_labels)\nmelt_data      = melt(data, id = id_labels, measure.vars = data_labels)\n\ntidy_data   = dcast(melt_data, subject + Activity_Label ~ variable, mean)\nwrite.table(tidy_data, file = \"./tidy_data.txt\")\n\n",
+    "created" : 1437947293907.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3408220931",
+    "id" : "A2D3C156",
+    "lastKnownWriteTime" : 1437947729,
+    "path" : "~/Movies/Getting and Cleaning Data/final-project/run_analysis.R",
+    "project_path" : "run_analysis.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
